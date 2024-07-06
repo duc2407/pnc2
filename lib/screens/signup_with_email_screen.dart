@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:pnc2/dialogs/dialog_signup_email_succes.dart';
+import 'package:pnc2/dialogs/dialog_status_signup_email.dart';
+import 'package:pnc2/viewModels/signup_with_email_screen_viewModels.dart';
+import 'package:provider/provider.dart';
 
-class SignUpCreenWithEmail extends StatefulWidget {
+class SignUpCreenWithEmail extends StatelessWidget {
   const SignUpCreenWithEmail({super.key});
-
-  @override
-  State<SignUpCreenWithEmail> createState() => _SignUpCreenWithEmailState();
-}
-
-class _SignUpCreenWithEmailState extends State<SignUpCreenWithEmail> {
-  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+    SignupWithEmailViewModel viewModel =
+        Provider.of<SignupWithEmailViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -29,60 +26,89 @@ class _SignUpCreenWithEmailState extends State<SignUpCreenWithEmail> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  decoration: const InputDecoration(
+                  controller: viewModel.controllerEmail,
+                  onChanged: (value) {
+                    viewModel.checkEmail(value);
+                  },
+                  decoration: InputDecoration(
                     labelText: "Enter Email",
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color:
+                            viewModel.isEmailValid ? Colors.grey : Colors.red,
+                      ),
+                    ),
+                    errorText:
+                        viewModel.isEmailValid ? null : 'Không phải email',
                   ),
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                    obscureText: _obscureText,
+                    onChanged: (value) {
+                      // Gọi hàm kiểm tra mật khẩu ở đây
+                      viewModel.isPasswordValid =
+                          viewModel.isPasswordStrong(value);
+                      viewModel
+                          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                          .notifyListeners(); // Thông báo sự thay đổi đến người nghe
+                    },
+                    controller: viewModel.controllerPassword,
+                    obscureText: viewModel.obscureText,
                     decoration: InputDecoration(
                         labelText: "Enter Password",
                         border: const OutlineInputBorder(),
+                        errorText: viewModel.isPasswordValid
+                            ? null
+                            : 'Mật khẩu cần lớn hơn 6 kí tự, không chứa kí hiệu đặc biệt.',
                         suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureText
+                              viewModel.obscureText
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                             ),
                             onPressed: () {
-                              setState(
-                                () {
-                                  _obscureText = !_obscureText;
-                                },
-                              );
+                              viewModel.viewPassword();
                             }))),
                 const SizedBox(height: 10),
                 TextFormField(
-                    obscureText: _obscureText,
+                    onChanged: (value) {
+                      viewModel.checkPasswordMatch(value);
+                    },
+                    controller: viewModel.controllerPasswordLast,
+                    obscureText: viewModel.obscureText,
                     decoration: InputDecoration(
                         labelText: "Enter Password",
                         border: const OutlineInputBorder(),
+                        errorText: viewModel.resultCheckPassword
+                            ? null
+                            : 'Mật khẩu không khớp, vui lòng kiểm tra lại',
                         suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureText
+                              viewModel.obscureText
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                             ),
                             onPressed: () {
-                              setState(
-                                () {
-                                  _obscureText = !_obscureText;
-                                },
-                              );
+                              viewModel.viewPassword();
                             }))),
                 const SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) =>
-                              const DialogSignUpEmailSuccess());
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const HomeScreen()));
+                      viewModel.signUp();
+
+                      if (viewModel.checkSignUp == 2) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => DialogStatusSignUpEmail(
+                                checkRequied: true,
+                                submitSucces: viewModel.message));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) => DialogStatusSignUpEmail(
+                                checkRequied: false,
+                                submitError: viewModel.message));
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(55),
