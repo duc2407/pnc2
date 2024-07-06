@@ -43,7 +43,7 @@ class DialogSignUp extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignUpCreenWithEmail(),
+                        builder: (context) => SignUpCreenWithEmail(),
                       ));
                 },
                 style: ElevatedButton.styleFrom(

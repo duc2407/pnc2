@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pnc2/screens/home_screen.dart';
 
 class DialogForgotPassword extends StatefulWidget {
   const DialogForgotPassword({super.key});
@@ -46,12 +44,10 @@ class _DialogForgotPasswordState extends State<DialogForgotPassword> {
             ),
             const Text(
                 'Please enter your registered email. We will send the password to your mail...'),
-            Container(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "Enter Email",
-                  border: OutlineInputBorder(),
-                ),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: "Enter Email",
+                border: OutlineInputBorder(),
               ),
             ),
             ElevatedButton(

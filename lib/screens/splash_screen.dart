@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pnc2/screens/home_screen.dart';
-import 'package:pnc2/screens/onboarding_sceen.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -30,21 +29,30 @@ class _SplashScreenState extends State<SplashScreen> {
             decoration: const BoxDecoration(
               color: Colors.black,
               image: DecorationImage(
-                  image: AssetImage("assets/images/img01.png"),
+                  image: AssetImage("assets/images/bg_one_app.png"),
                   fit: BoxFit.cover,
                   opacity: 0.3),
             ),
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.shopping_cart,
-                    size: 200, color: Color.fromARGB(255, 235, 149, 143)),
-                Text("DUCK SHOP",
+                SvgPicture.asset(
+                  'assets/svgs/icon_doctor.svg',
+                  width: 200,
+                ),
+                const Text("Khám bệnh ISO",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic))
+                        fontStyle: FontStyle.italic)),
+                const Text(
+                  'Bản quyền bởi ©Copyright by Duckit247',
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic),
+                ),
               ],
             )));
   }
